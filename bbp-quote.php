@@ -17,14 +17,14 @@ class bbP_Quote {
 	/**
 	 * Init method.
 	 */
-	public function init() {
+	public static function init() {
 		return new self();
 	}
 
 	/**
 	 * Constructor.
 	 */
-	function __construct() {
+	public function __construct() {
 		// page injection
 		add_action( 'bbp_theme_before_reply_form_submit_wrapper', array( $this, 'javascript' ) );
 
