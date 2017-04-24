@@ -45,9 +45,12 @@ class bbP_Quote {
 		// remove kses additions
 		add_action( 'bbp_theme_after_reply_form_content',         array( $this, 'remove_bbp_quote_attributes' ) );
 
-		// inline CSS
+		// editor CSS
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 		add_filter( 'mce_css', array( $this, 'editor_styles' ) );
+
+		// inline CSS
+		add_filter( 'bp_email_set_template', array( $this, 'bp_html_css' ) );
 	}
 
 	/**
@@ -226,6 +229,33 @@ class bbP_Quote {
 
 		$css .= ',' . plugins_url( 'style.css', __FILE__ );
 		return $css;
+	}
+
+	/**
+	 * Inject custom inline CSS into BuddyPress HTML emails.
+	 *
+	 * Unfortunately, BuddyPress doesn't make this easy!
+	 */
+	public function bp_html_css( $retval ) {
+		$css = <<<CSS
+blockquote {
+	margin-right:.5em;
+}
+
+blockquote blockquote {
+	border-color: #CDCDCD #CDCDCD #CDCDCD #c4c4c4;
+	border-style: solid;
+	border-width: 1px 1px 1px 10px;
+	margin-left:0;
+	padding: 0.5em 2em;
+}
+blockquote .bbp-the-quote-cite {
+	display: block;
+	margin-bottom:1em;
+}
+
+CSS;
+		return substr_replace( $retval, $css, strpos( $retval, '</style>' ), 0 );
 	}
 }
 
