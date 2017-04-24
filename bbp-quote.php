@@ -173,7 +173,6 @@ class bbP_Quote {
 
 	}
 
-
 	/**
 	 * Hack for bbPress 2.2.x.
 	 *
