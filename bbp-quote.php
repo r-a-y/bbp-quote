@@ -29,8 +29,8 @@ class bbP_Quote {
 		add_action( 'bbp_theme_before_reply_form_submit_wrapper', array( $this, 'javascript' ) );
 
 		// quote links
-		add_action( 'bbp_theme_before_topic_admin_links',         array( $this, 'add_quote' ) );
-		add_action( 'bbp_theme_before_reply_admin_links',         array( $this, 'add_quote' ) );
+		add_filter( 'bbp_topic_admin_links', array( $this, 'add_quote_link' ), 1 );
+		add_filter( 'bbp_reply_admin_links', array( $this, 'add_quote_link' ), 1 );
 
 		// kses additions
 		add_filter( 'bbp_kses_allowed_tags', array( $this, 'allowed_attributes' ) );
@@ -130,22 +130,17 @@ class bbP_Quote {
 
 	/**
 	 * Add "Quote" link to admin links.
+	 *
+	 * @param  array $retval Current links.
+	 * @return array
 	 */
-	public function add_quote() {
-		if ( ! is_user_logged_in() )
-			return;
+	public function add_quote_link( $retval ) {
+		if ( ! is_user_logged_in() ) {
+			return $retval;
+		}
 
-		// strip_tags() used for bbP 2.2.x
-		$has_admin_links = strip_tags( bbp_get_reply_admin_links() );
-
-	?>
-
-		<span class="bbp-admin-links">
-			<?php if ( ! empty( $has_admin_links ) ) : ?>&nbsp;|<?php endif; ?>
-			<a class="bbp-quote" href="javascript:;"><?php _e( 'Quote', 'bbp-quote' ); ?></a>
-		</span>
-
-	<?php
+		$retval['quote'] = '<a class="bbp-quote" href="javascript:;">' . esc_html__( 'Quote', 'bbp-quote' ) . '</a>';
+		return $retval;
 	}
 
 	/**
