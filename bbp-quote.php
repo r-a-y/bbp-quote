@@ -152,6 +152,7 @@ class bbP_Quote {
 	public function allowed_attributes( $retval ) {
 		$retval['blockquote']['class'] = array();
 		$retval['em']['class']         = array();
+		$retval['p'] = array();
 
 		return $retval;
 	}
