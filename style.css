@@ -1,0 +1,13 @@
+.bbp-the-quote {
+	border-color: #CDCDCD #CDCDCD #CDCDCD #c4c4c4;
+	border-style: solid;
+	border-width: 1px 1px 1px 10px;
+	margin-bottom: 1em;
+	padding-left: 1em;
+}
+.bbp-the-quote > p, .bbp-the-quote p:last-child {margin-bottom: 0.5em !important;}
+.bbp-the-quote-cite {
+	display:block;
+	margin-top: 0.5em;
+	margin-bottom: 1em;
+}

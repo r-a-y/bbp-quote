@@ -46,7 +46,7 @@ class bbP_Quote {
 		add_action( 'bbp_theme_after_reply_form_content',         array( $this, 'remove_bbp_quote_attributes' ) );
 
 		// inline CSS
-		add_action( 'wp_head',                                    array( $this, 'inline_css' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
 	}
 
 	/**
@@ -187,12 +187,12 @@ class bbP_Quote {
 	}
 
 	/**
-	 * Inline CSS.
+	 * Enqueue CSS.
 	 *
 	 * Feel free to disable with the 'bbp_quote_enable_css' filter and roll your
 	 * own in your theme's stylesheet.
 	 */
-	public function inline_css() {
+	public function enqueue_styles() {
 		if ( ! apply_filters( 'bbp_quote_enable_css', true ) )
 			return;
 
@@ -205,27 +205,13 @@ class bbP_Quote {
 		}
 
 		// not on a topic page? stop now!
-		if ( empty( $show ) )
+		if ( empty( $show ) ) {
 			return;
-	?>
-
-		<style type="text/css">
-		.bbp-the-quote {
-			border-color: #CDCDCD #CDCDCD #CDCDCD #c4c4c4;
-			border-style: solid;
-			border-width: 1px 1px 1px 10px;
-			margin-bottom: 1em;
-			padding-left: 1em;
 		}
-		.bbp-the-quote > p, .bbp-the-quote p:last-child {margin-bottom: 0.5em !important;}
-		.bbp-the-quote-cite {
-			display:block;
-			margin-top: 0.5em;
-		}
-		</style>
 
-	<?php
+		wp_enqueue_style( 'bbp-quote', plugins_url( 'style.css', __FILE__ ) );
 	}
+
 }
 
 add_action( 'bbp_includes', array( 'bbP_Quote', 'init' ) );
