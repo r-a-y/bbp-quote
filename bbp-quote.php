@@ -36,11 +36,11 @@ class bbP_Quote {
 		add_filter( 'bbp_kses_allowed_tags', array( $this, 'allowed_attributes' ) );
 
 		// remove kses additions
-		add_action( 'bbp_theme_after_reply_form_content',         array( $this, 'remove_bbp_quote_attributes' ) );
+		add_action( 'bbp_theme_after_reply_form_content', array( $this, 'remove_bbp_quote_attributes' ) );
 
 		// editor CSS
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
-		add_filter( 'mce_css', array( $this, 'editor_styles' ) );
+		add_filter( 'mce_css',            array( $this, 'editor_styles' ) );
 
 		// inline CSS
 		add_filter( 'bp_email_set_template', array( $this, 'bp_html_css' ) );
