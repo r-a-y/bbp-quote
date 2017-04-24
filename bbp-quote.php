@@ -32,15 +32,8 @@ class bbP_Quote {
 		add_action( 'bbp_theme_before_topic_admin_links',         array( $this, 'add_quote' ) );
 		add_action( 'bbp_theme_before_reply_admin_links',         array( $this, 'add_quote' ) );
 
-		// kses additions for 2.3+
-		if ( version_compare( bbp_get_version(), '2.2.4' ) > 0 ) {
-			add_filter( 'bbp_kses_allowed_tags',              array( $this, 'allowed_attributes' ) );
-
-		// kses additions for 2.2.x
-		} else {
-			add_filter( 'bbp_new_reply_pre_content',          array( $this, 'wp_filter_kses' ), 9 );
-			add_filter( 'bbp_new_topic_pre_content',          array( $this, 'wp_filter_kses' ), 9 );
-		}
+		// kses additions
+		add_filter( 'bbp_kses_allowed_tags', array( $this, 'allowed_attributes' ) );
 
 		// remove kses additions
 		add_action( 'bbp_theme_after_reply_form_content',         array( $this, 'remove_bbp_quote_attributes' ) );
@@ -87,16 +80,10 @@ class bbP_Quote {
 
 			jQuery(document).ready( function($) {
 				$(".bbp-quote").on("click", function(){
-				<?php if ( version_compare( bbp_get_version(), '2.2.4' ) > 0 ) : ?>
-					var id        = $(this).closest('.bbp-reply-header').prop('id');
-					var permalink = $('#' + id + ' .bbp-reply-permalink').prop('href');
-				<?php else : ?>
-					var header    = $(this).closest('.bbp-reply-header');
-					var id        = header.next().prop('id');
-					var permalink = header.find('.bbp-reply-permalink').prop('href');
-				<?php endif; ?>
-					var author    = $('.' + id + ' .bbp-author-name').text();
-					var content   = $('.' + id + ' .bbp-reply-content').html();
+					var id = $(this).closest('.bbp-reply-header').prop('id'),
+						permalink = $('#' + id + ' .bbp-reply-permalink').prop('href'),
+						author    = $('.' + id + ' .bbp-author-name').text(),
+						content   = $('.' + id + ' .bbp-reply-content').html();
 
 					// scroll to form
 					$("html, body").animate(
@@ -178,31 +165,7 @@ class bbP_Quote {
 	 * so they will not show up there.
 	 */
 	public function remove_bbp_quote_attributes() {
-		// bbPress 2.3+
-		if ( version_compare( bbp_get_version(), '2.2.4' ) > 0 ) {
-			remove_filter( 'bbp_kses_allowed_tags',     array( $this, 'allowed_attributes' ) );
-
-		// bbPress <= 2.2.4
-		} else {
-			remove_filter( 'bbp_new_reply_pre_content', array( $this, 'wp_filter_kses' ), 9 );
-		}
-
-	}
-
-	/**
-	 * Hack for bbPress 2.2.x.
-	 *
-	 * bbPress 2.3 has its own kses filtering function - {@link bbp_filter_kses()}.
-	 *
-	 * Unfortunately, 2.2.x does not and uses WP's old-school {@link wp_filter_kses()}.
-	 * Fortunately, we can workaround this with the $allowedtags global.
-	 */
-	public function wp_filter_kses( $retval = 0 ) {
-		global $allowedtags;
-
-		$allowedtags = $this->allowed_attributes( $allowedtags );
-
-		return $retval;
+		remove_filter( 'bbp_kses_allowed_tags', array( $this, 'allowed_attributes' ) );
 	}
 
 	/**
