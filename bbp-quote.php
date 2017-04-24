@@ -110,15 +110,30 @@ class bbP_Quote {
 
 				// when clicking on a citation, do fancy scroll
 				$(".bbp-the-quote-cite a").on("click", function(e){
-					var id = $(this.hash);
+					var id = $(this.hash),
+						qd = {};
 
-				        e.preventDefault();
-					jQuery("html, body").animate(
-						{scrollTop: jQuery(id).offset().top},
-						500
-					);
+					// Check for BP Forum Settings permalink.
+					if ( ! id.selector ) {
+						this.href.split('?')[1].split('&').forEach(function(i){
+    qd[i.split('=')[0]]=i.split('=')[1];
+});
 
-				        location.hash = id.selector;
+						if ( qd.p ) {
+							id = $( '#post-' + qd.p );
+						}
+					}
+
+					// Post is on this page, so fancy scroll!
+					if ( id.length ) {
+					        e.preventDefault();
+						$("html, body").animate(
+							{scrollTop: $(id).offset().top},
+							500
+						);
+
+					        location.hash = id.selector;
+				        }
 				});
 			});
 		</script>
