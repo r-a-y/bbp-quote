@@ -47,6 +47,7 @@ class bbP_Quote {
 
 		// inline CSS
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+		add_filter( 'mce_css', array( $this, 'editor_styles' ) );
 	}
 
 	/**
@@ -212,6 +213,20 @@ class bbP_Quote {
 		wp_enqueue_style( 'bbp-quote', plugins_url( 'style.css', __FILE__ ) );
 	}
 
+	/**
+	 * Add CSS to style blockquotes in TinyMCE.
+	 *
+	 * @param  string $css String of CSS assets for TinyMCE.
+	 * @return string
+	 */
+	public function editor_styles( $css ){
+		if ( ! apply_filters( 'bbp_quote_enable_editor_css', true ) ) {
+			return $css;
+		}
+
+		$css .= ',' . plugins_url( 'style.css', __FILE__ );
+		return $css;
+	}
 }
 
 add_action( 'bbp_includes', array( 'bbP_Quote', 'init' ) );
