@@ -55,6 +55,27 @@ class bbP_Quote {
 	?>
 
 		<script type="text/javascript">
+			// Selection function that handles HTML.
+			// @link https://stackoverflow.com/a/6668159
+			function bbp_get_selection() {
+				var html = "";
+				if (typeof window.getSelection != "undefined") {
+					var sel = window.getSelection();
+					if (sel.rangeCount) {
+						var container = document.createElement("div");
+						for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+							container.appendChild(sel.getRangeAt(i).cloneContents());
+						}
+						html = container.innerHTML;
+					}
+				} else if (typeof document.selection != "undefined") {
+					if (document.selection.type == "Text") {
+						html = document.selection.createRange().htmlText;
+					}
+				}
+				return html;
+			}
+
 			function bbp_insert_quote( user, text, permalink ){
 				var content = '<blockquote class="bbp-the-quote" cite="' + permalink + '"><em class="bbp-the-quote-cite"><a href="' + permalink + '">' + user + ' wrote:</a></em>' + text.replace(/(\r\n|\n|\r)/gm,"").replace('<br>',"\n") + '</blockquote>' + "\r\n\n";
 
@@ -83,7 +104,11 @@ class bbP_Quote {
 					var id = $(this).closest('.bbp-reply-header').prop('id'),
 						permalink = $('#' + id + ' .bbp-reply-permalink').prop('href'),
 						author    = $('.' + id + ' .bbp-author-name').text(),
-						content   = $('.' + id + ' .bbp-reply-content').html();
+						content   = bbp_get_selection();
+
+					if ( ! content ) {
+						content = $('.' + id + ' .bbp-reply-content').html();
+					}
 
 					// scroll to form
 					$("html, body").animate(
