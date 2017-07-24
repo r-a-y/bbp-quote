@@ -104,8 +104,32 @@ class bbP_Quote {
 					var id = $(this).closest('.bbp-reply-header').prop('id'),
 						permalink = $('#' + id + ' .bbp-reply-permalink').prop('href'),
 						author    = $('.' + id + ' .bbp-author-name').text(),
-						content   = bbp_get_selection();
+						content   = bbp_get_selection(),
+						sel, parentEl;
 
+					// Check if selection is part of the current forum post.
+					if ( content ) {
+						if (window.getSelection) {
+							sel = window.getSelection();
+							if (sel.rangeCount) {
+								parentEl = sel.getRangeAt(0).commonAncestorContainer;
+								if (parentEl.nodeType != 1) {
+									parentEl = parentEl.parentNode;
+								}
+							}
+						} else if ( (sel = document.selection) && sel.type != "Control") {
+							parentEl = sel.createRange().parentElement();
+						}
+
+						if ( parentEl ) {
+							parentEl = $(parentEl).closest('.hentry').prev('.bbp-reply-header');
+							if ( parentEl && parentEl.prop('id') !== id ) {
+								content = false;
+							}
+						}
+					}
+
+					// Fallback to whole forum post for quote.
 					if ( ! content ) {
 						content = $('.' + id + ' .bbp-reply-content').html();
 					}
