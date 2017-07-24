@@ -82,6 +82,7 @@ class bbP_Quote {
 				// check if tinyMCE is active and visible
 				if ( tinyMCE && tinyMCE.activeEditor && ! tinyMCE.activeEditor.isHidden() ) {
 					tinyMCE.activeEditor.selection.setContent( content );
+					tinyMCE.activeEditor.selection.collapse(false);
 					tinyMCE.activeEditor.focus();
 
 				// regular textarea
