@@ -5,8 +5,8 @@ A plugin for bbPress that allows users to quote forum posts.
 
 Works with the fancy editor (TinyMCE) and the the regular textarea.
 
-**Minimum requirements:** WordPress 3.6, bbPress 2.3
-**Tested up to:** WordPress 4.7+, bbPress 2.6-bleeding
+**Minimum requirements:** WordPress 3.6, bbPress 2.3  
+**Tested up to:** WordPress 4.8+, bbPress 2.6-bleeding
 
 How to use?
 - 
@@ -23,7 +23,7 @@ Caveats
  
 FAQ
 -
-**Q. Your plugin uses inline CSS.  How do I get rid of it?**  
+**Q. Your plugin uses an external CSS stylesheet.  How do I get rid of it?**  
 Add the following snippet to your theme's functions.php:
 
      add_filter( 'bbp_quote_enable_css', '__return_false' );
