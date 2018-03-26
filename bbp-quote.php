@@ -104,7 +104,7 @@ class bbP_Quote {
 				$(".bbp-quote").on("click", function(){
 					var id = $(this).closest('.bbp-reply-header').prop('id'),
 						permalink = $('#' + id + ' .bbp-reply-permalink').prop('href'),
-						author    = $('.' + id + ' .bbp-author-name').text(),
+						author    = $('.' + id + ' .bbp-author-name').first().text(),
 						content   = bbp_get_selection(),
 						sel, parentEl;
 
