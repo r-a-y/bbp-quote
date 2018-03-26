@@ -132,7 +132,7 @@ class bbP_Quote {
 
 					// Fallback to whole forum post for quote.
 					if ( ! content ) {
-						content = $('.' + id + ' .bbp-reply-content').html();
+						content = $('.' + id + ' .bbp-reply-content :not(ul.bbp-topic-revision-log,ul.bbp-reply-revision-log)').html();
 					}
 
 					// scroll to form
