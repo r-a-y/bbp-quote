@@ -223,15 +223,15 @@ class bbP_Quote {
 		if ( ! apply_filters( 'bbp_quote_enable_css', true ) )
 			return;
 
-		// are we on a topic page?
-		$show = bbp_is_single_topic();
+		// are we on a bbPress page?
+		$show = is_bbpress();
 
-		// check for BuddyPress group forum topic page
+		// check for BuddyPress group forum pages.
 		if ( empty( $show ) && bbp_is_group_forums_active() && defined( 'BP_VERSION' ) && bp_is_active( 'groups' ) ) {
-			$show = bp_is_group_forum_topic();
+			$show = bp_is_group() && bp_is_current_action( 'forum' );
 		}
 
-		// not on a topic page? stop now!
+		// not on a bbPress page? stop now!
 		if ( empty( $show ) ) {
 			return;
 		}
