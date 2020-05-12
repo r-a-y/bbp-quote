@@ -80,7 +80,7 @@ class bbP_Quote {
 				var content = '<blockquote class="bbp-the-quote" cite="' + permalink + '"><em class="bbp-the-quote-cite"><a href="' + permalink + '">' + user + ' wrote:</a></em>' + text.replace(/(\r\n|\n|\r)/gm,"").replace('<br>',"\n") + '</blockquote>' + "\r\n\n";
 
 				// check if tinyMCE is active and visible
-				if ( tinyMCE && tinyMCE.activeEditor && ! tinyMCE.activeEditor.isHidden() ) {
+				if ( window.tinyMCE && tinyMCE.activeEditor && ! tinyMCE.activeEditor.isHidden() ) {
 					tinyMCE.activeEditor.selection.setContent( content );
 					tinyMCE.activeEditor.selection.collapse(false);
 					tinyMCE.activeEditor.focus();
