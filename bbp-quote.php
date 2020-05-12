@@ -44,6 +44,10 @@ class bbP_Quote {
 
 		// inline CSS
 		add_filter( 'bp_email_set_template', array( $this, 'bp_html_css' ) );
+
+		// right angle bracket to blockquote
+		add_filter( 'bbp_get_topic_content', array( $this, 'right_angle_bracket_to_blockquote' ), 45 );
+		add_filter( 'bbp_get_reply_content', array( $this, 'right_angle_bracket_to_blockquote' ), 45 );
 	}
 
 	/**
@@ -202,6 +206,31 @@ class bbP_Quote {
 		$retval['p'] = array();
 
 		return $retval;
+	}
+
+	/**
+	 * Transforms '> ' to a blockquote.
+	 *
+	 * Line must begin with '> ' in order for the transformation to take place.
+	 */
+	public function right_angle_bracket_to_blockquote( $retval ) {
+		// Check if our blockquote marker is at the beginning of the reply or on a separate line.
+		$marker = '> ';
+		if ( 0 !== strpos( $retval, $marker ) && false === strpos( $retval, "\n" . $marker ) ) {
+			return $retval;
+		}
+
+		$lines = explode( "\n", $retval );
+		foreach ( $lines as $i => $line ) {
+			if ( 0 !== strpos( $line, $marker ) ) {
+				continue;
+			}
+
+			$lines[$i] = substr_replace( $line, '<blockquote class="bbp-the-quote">', 0, 2 );
+			$lines[$i] .= '</blockquote>';
+		}
+
+		return implode( "\n", $lines );
 	}
 
 	/**
