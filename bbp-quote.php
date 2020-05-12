@@ -211,7 +211,8 @@ class bbP_Quote {
 	/**
 	 * Transforms '> ' to a blockquote.
 	 *
-	 * Line must begin with '> ' in order for the transformation to take place.
+	 * Line must begin with '> ' in order for the transformation to take
+	 * place. To stop a quote, use two breaklines.
 	 */
 	public function right_angle_bracket_to_blockquote( $retval ) {
 		$found = false;
