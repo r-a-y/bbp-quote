@@ -214,24 +214,39 @@ class bbP_Quote {
 	 * Line must begin with '> ' in order for the transformation to take place.
 	 */
 	public function right_angle_bracket_to_blockquote( $retval ) {
+		$found = false;
 		// Check if our blockquote marker is at the beginning of the reply or on a separate line.
 		$marker = '> ';
-		if ( 0 !== strpos( $retval, $marker ) && false === strpos( $retval, "\n" . $marker ) ) {
+		if ( 0 === strpos( $retval, $marker ) || false !== strpos( $retval, "\n" . $marker ) ) {
+			$found = true;
+		}
+
+		// Sometimes the HTML entity could be used, so check for that too.
+		$marker2 = '&gt; ';
+		if ( false === $found && ( 0 === strpos( $retval, $marker2 ) || false !== strpos( $retval, "\n" . $marker2 ) ) ) {
+			$found = true;
+		}
+
+		if ( ! $found ) {
 			return $retval;
 		}
 
-		$lines = explode( "\n", $retval );
+		$lines = explode( "\n\n", $retval );
 		foreach ( $lines as $i => $line ) {
-			if ( 0 !== strpos( $line, $marker ) ) {
+			if ( 0 === strpos( $line, $marker ) ) {
+				$len = 2;
+			} elseif ( 0 === strpos( $line, $marker2 ) ) {
+				$len = 5;
+			} else {
 				continue;
 			}
 
-			$lines[$i] = substr_replace( $line, '<blockquote class="bbp-the-quote">', 0, 2 );
+			$lines[$i] = substr_replace( $line, '<blockquote class="bbp-the-quote">', 0, $len );
 			$lines[$i] = rtrim( $lines[$i] );
 			$lines[$i] .= '</blockquote>';
 		}
 
-		return implode( "\n", $lines );
+		return implode( "\n\n", $lines );
 	}
 
 	/**
