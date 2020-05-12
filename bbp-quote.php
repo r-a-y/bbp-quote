@@ -227,6 +227,7 @@ class bbP_Quote {
 			}
 
 			$lines[$i] = substr_replace( $line, '<blockquote class="bbp-the-quote">', 0, 2 );
+			$lines[$i] = rtrim( $lines[$i] );
 			$lines[$i] .= '</blockquote>';
 		}
 
