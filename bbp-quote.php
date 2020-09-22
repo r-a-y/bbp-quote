@@ -106,10 +106,12 @@ class bbP_Quote {
 
 			jQuery(document).ready( function($) {
 				$(".bbp-quote").on("click", function(){
-					var id = $(this).closest('.bbp-reply-header').prop('id'),
-						permalink = $('#' + id + ' .bbp-reply-permalink').prop('href'),
-						author    = $('.' + id + ' .bbp-author-name').first().text(),
-						content   = bbp_get_selection(),
+					var idName = $(this).closest('.bbp-reply-header').prop('id'),
+						id          = idName.replace( 'post-', '' ),
+						permalink   = $('#' + idName + ' .bbp-reply-permalink').prop('href'),
+						author      = $('.' + idName + ' .bbp-author-name').first().text(),
+						content     = bbp_get_selection(),
+						firstPostId = $('ul.bbp-replies').prop('id').replace('topic-','').replace('-replies',''),
 						sel, parentEl;
 
 					// Check if selection is part of the current forum post.
@@ -128,7 +130,7 @@ class bbP_Quote {
 
 						if ( parentEl ) {
 							parentEl = $(parentEl).closest('.hentry').prev('.bbp-reply-header');
-							if ( parentEl && parentEl.prop('id') !== id ) {
+							if ( parentEl && parentEl.prop('id') !== idName ) {
 								content = false;
 							}
 						}
@@ -136,14 +138,34 @@ class bbP_Quote {
 
 					// Fallback to whole forum post for quote.
 					if ( ! content ) {
-						content = $('.' + id + ' .bbp-reply-content :not(ul.bbp-topic-revision-log,ul.bbp-reply-revision-log)').html();
+						content = $('.' + idName + ' .bbp-reply-content :not(ul.bbp-topic-revision-log,ul.bbp-reply-revision-log)').html();
 					}
 
-					// scroll to form
-					$("html, body").animate(
-						{scrollTop: $("#new-post").offset().top},
-						500
-					);
+					/*
+					 * Threaded mode.
+					 *
+					 * Only use moveForm() if we're not quoting the first post to comply with
+					 * how bbPress does threading.
+					 */
+					if ( typeof addReply !== 'undefined' && id !== firstPostId ) {
+						addReply.moveForm( idName , id, 'new-reply-' + firstPostId, firstPostId );
+
+					// Linear mode.
+					} else {
+						// Scroll to form.
+						$("html, body").animate(
+							{scrollTop: $("#new-post").offset().top},
+							500
+						);
+
+						/*
+						 * Set reply to ID for linear mode.
+						 *
+						 * If quoting first post, reply to ID is always zero as this is how
+						 * bbPress does threading.
+						 */
+						$('#bbp_reply_to').val( firstPostId === id ? 0 : id );
+					}
 
 					// insert quote
 					bbp_insert_quote( author, content, permalink );
