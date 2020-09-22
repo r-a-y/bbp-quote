@@ -167,7 +167,7 @@ class bbP_Quote {
 
 					// Post is on this page, so fancy scroll!
 					if ( id.length ) {
-					        e.preventDefault();
+						e.preventDefault();
 						$("html, body").animate(
 							{scrollTop: $(id).offset().top},
 							500
